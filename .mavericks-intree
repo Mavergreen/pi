@@ -1,0 +1,1 @@
+VERSION    # release.yml's version step writes the resolved <upstream>-mavericks.N here; CMake reads it
