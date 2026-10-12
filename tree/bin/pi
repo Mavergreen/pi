@@ -1,0 +1,26 @@
+#!/bin/sh
+# platform: macOS-only -- runs Pi on Mac OS X 10.9
+
+_pi_s="$0"
+_pi_n=0
+while [ -L "$_pi_s" ]; do
+  _pi_n=$((_pi_n+1))
+  [ "$_pi_n" -le 40 ] || { echo "pi: too many symlinks: $0" >&2; exit 1; }
+  _pi_t="$(readlink "$_pi_s")"
+  case "$_pi_t" in
+    /*) _pi_s="$_pi_t" ;;
+    *) _pi_s="$(dirname "$_pi_s")/$_pi_t" ;;
+  esac
+done
+_pi_x="$(CDPATH= cd -P "$(dirname "$_pi_s")" && pwd -P)/../libexec/pi" || exit 1
+for _pi_m in lib; do
+  . "$_pi_x/$_pi_m.sh" || exit 1
+done
+
+pi_init "$0"
+
+[ -f "$PI_TREE/share/pi/requires" ] || pi_die "missing $PI_TREE/share/pi/requires"
+while read -r _pi_short _pi_url || [ -n "$_pi_short" ]; do
+  [ -n "$_pi_short" ] || continue
+  [ -f "$PI_MG/$_pi_short/mavergreen.plist" ] || pi_die "$_pi_short is not installed; get it from $_pi_url"
+done < "$PI_TREE/share/pi/requires"
