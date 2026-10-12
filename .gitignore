@@ -4,3 +4,5 @@
 /.superpowers/
 .idea/
 /.idea/
+/VERSION
+CMakeUserPresets.json
