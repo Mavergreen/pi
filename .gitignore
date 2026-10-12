@@ -1,0 +1,6 @@
+# Superpowers working files are ephemeral: specs/plans/ledgers/backlog live in
+# the working tree and out of git history (family convention, check 27).
+.superpowers/
+/.superpowers/
+.idea/
+/.idea/
