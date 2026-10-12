@@ -13,7 +13,7 @@ while [ -L "$_pi_s" ]; do
   esac
 done
 _pi_x="$(CDPATH= cd -P "$(dirname "$_pi_s")" && pwd -P)/../libexec/pi" || exit 1
-for _pi_m in lib; do
+for _pi_m in lib select stage addon env; do
   . "$_pi_x/$_pi_m.sh" || exit 1
 done
 
@@ -24,3 +24,16 @@ while read -r _pi_short _pi_url || [ -n "$_pi_short" ]; do
   [ -n "$_pi_short" ] || continue
   [ -f "$PI_MG/$_pi_short/mavergreen.plist" ] || pi_die "$_pi_short is not installed; get it from $_pi_url"
 done < "$PI_TREE/share/pi/requires"
+
+pi_setup_env
+
+if V="$(pi_choose)"; then
+  :
+else
+  pi_stage || exit 1
+  V="$(pi_choose)" || pi_die "seeded Pi under $PI_MROOT, but no runnable release is there"
+fi
+
+pi_swap_addon "$V"
+
+exec "$PI_MG/node24/bin/node" "$(pi_entry "$V")" "$@"
