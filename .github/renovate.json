@@ -1,0 +1,13 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["github>Mavergreen/shipyard"],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["/^UPSTREAM_VERSION$/"],
+      "matchStrings": ["^(?<currentValue>.+?)\\s*$"],
+      "depNameTemplate": "@earendil-works/pi-coding-agent",
+      "datasourceTemplate": "npm"
+    }
+  ]
+}
