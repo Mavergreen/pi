@@ -20,8 +20,9 @@ Verified present before launch (`share/pi/requires`); a missing one fails with i
 | pi-tui tarball, derived: its native sources build the 10.9 addon | Pi's installer release manifest for `UPSTREAM_VERSION`, verified by npm `dist.integrity` | ✅ follows Pi: re-derived whenever `UPSTREAM_VERSION` moves | the addon-source-id is recomputed; a source change rebuilds the addon |
 | MacOSX10.9 SDK, CMake modules, compat guard, packaging and signing scripts | `Mavergreen/shipyard@v1` | ✅ github-actions manager tracks the tag | `@v1` moves without the pin changing, so nothing repackages by itself |
 | Sparkle, in the updater | shipyard's `fetch_sparkle_framework.sh`, pinned by hash there | ❌ untrackable here: shipyard owns that pin | follows shipyard |
+| node24, CI only: the runtime `tests/addon-compat-test.sh` loads the built addon with in the release job | `components/node24/version`, a `Mavergreen/nodejs-24` release tag | ✅ custom manager, `github-releases` with `-mavericks.N` versioning | CI tests against the new node24; nothing is shipped from it, so nothing republishes |
 
-No ingredient is pinned in a file of its own: the pi-tui source the addon is built from follows `UPSTREAM_VERSION`, and everything else comes with shipyard. So there is no `repackage-on-ingredient-bump` caller; a packaging-only release is a `workflow_dispatch` with `repackage`.
+No shipped ingredient is pinned in a file of its own: the pi-tui source the addon is built from follows `UPSTREAM_VERSION`, and everything else comes with shipyard. `components/node24/version` is a file, but it pins only what CI tests with, so it stays out of the declared state. So there is no `repackage-on-ingredient-bump` caller; a packaging-only release is a `workflow_dispatch` with `repackage`.
 
 ## Declared state
 

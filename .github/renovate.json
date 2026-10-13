@@ -8,6 +8,15 @@
       "matchStrings": ["^(?<currentValue>.+?)\\s*$"],
       "depNameTemplate": "@earendil-works/pi-coding-agent",
       "datasourceTemplate": "npm"
+    },
+    {
+      "customType": "regex",
+      "description": "The node24 the release job's tests load the addon with (tests/addon-compat-test.sh): a Mavergreen/nodejs-24 release tag, bare. CI-only, so a bump changes no shipped byte and publishes nothing. The versioning regex reads -mavericks.N as the build number; Renovate's default would coerce it away and never propose a -mavericks.N bump.",
+      "managerFilePatterns": ["/^components/node24/version$/"],
+      "matchStrings": ["^(?<currentValue>\\S+)\\s*$"],
+      "depNameTemplate": "Mavergreen/nodejs-24",
+      "datasourceTemplate": "github-releases",
+      "versioningTemplate": "regex:^(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)-mavericks\\.(?<build>\\d+)$"
     }
   ]
 }

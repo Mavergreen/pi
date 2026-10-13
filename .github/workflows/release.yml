@@ -89,15 +89,16 @@ jobs:
             || sudo softwareupdate --install-rosetta --agree-to-license
           arch -x86_64 /usr/bin/true
 
-      - name: Install node24, the runtime that loads the addon
+      - name: Install node24 (components/node24/version), the runtime that loads the addon
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -eu
           dl="$RUNNER_TEMP/node24"
-          gh release download -R Mavergreen/nodejs-24 --pattern '*.pkg' --pattern SHA256SUMS --dir "$dl"
+          tag="$(tr -d ' \t\r\n' < components/node24/version)"
+          gh release download "$tag" -R Mavergreen/nodejs-24 --pattern '*.pkg' --pattern SHA256SUMS --dir "$dl"
           set -- "$dl"/*.pkg
-          [ $# -eq 1 ] && [ -f "$1" ] || { echo "::error::expected one .pkg in Mavergreen/nodejs-24's latest release, got: $*"; exit 1; }
+          [ $# -eq 1 ] && [ -f "$1" ] || { echo "::error::expected one .pkg in Mavergreen/nodejs-24's $tag release, got: $*"; exit 1; }
           name="$(basename "$1")"
           sum="$(awk -v f="$name" '$2 == f' "$dl/SHA256SUMS")"
           [ -n "$sum" ] || { echo "::error::$name is not in that release's SHA256SUMS"; exit 1; }
