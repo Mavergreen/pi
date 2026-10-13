@@ -33,7 +33,7 @@ R="$H/repo"
 mkdir -p "$R/build"
 cp -R "$PK" "$H_REPO/tree" "$R/"
 cp "$H_REPO/build/msc.sh" "$R/build/"
-cp "$H_REPO/UPSTREAM_VERSION" "$H_REPO/README.md" "$R/"
+cp "$H_REPO/UPSTREAM_VERSION" "$H_REPO/LICENSE" "$H_REPO/NOTICE" "$H_REPO/README.md" "$R/"
 printf '%s' "$(cat "$R/tree/share/pi/requires")" > "$R/tree/share/pi/requires"
 [ "$(tail -c 1 "$R/tree/share/pi/requires" | od -An -c | tr -d ' ')" != '\n' ] \
   || { echo "FAIL: the fixture's requires still ends in a newline" >&2; exit 1; }
@@ -85,7 +85,10 @@ h_assert_eq "$UV" "$(cat "$T/share/pi/seed-version")" "seed-version is UPSTREAM_
 h_assert_ok cmp -s "$A/darwin-platform.node" "$T/share/pi/darwin-platform.node"
 h_assert_ok cmp -s "$A/addon-source-id" "$T/share/pi/addon-source-id"
 h_assert_ok cmp -s "$R/tree/share/pi/requires" "$T/share/pi/requires"
-h_assert_eq "README.md" "$(ls -A "$T/share/doc/pi")" "the docs are the README alone; the repo has no LICENSE to ship"
+h_assert_eq "LICENSE
+NOTICE
+README.md" "$(ls -A "$T/share/doc/pi")" "the docs are the LICENSE, the NOTICE for the addon's MIT source, and the README"
+h_assert_contains "$(cat "$T/share/doc/pi/NOTICE")" "Copyright (c) 2025 Mario Zechner" "the NOTICE carries pi-tui's copyright line"
 h_assert_eq "addon.sh env.sh lib.sh select.sh stage.sh" "$(ls "$T/libexec/pi" | tr '\n' ' ' | sed 's/ $//')" "libexec/pi holds the launcher's modules"
 h_assert_ok test -x "$T/bin/pi"
 h_assert_eq "bin libexec mavergreen.plist share" "$(ls "$T" | tr '\n' ' ' | sed 's/ $//')" "the tree holds bin, libexec, share and the manifest"

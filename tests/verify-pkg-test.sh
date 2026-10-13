@@ -28,6 +28,8 @@ mk() {
   cp "$A/darwin-platform.node" "$A/addon-source-id" "$t/share/pi/"
   printf '%s\n' "$UV" > "$t/share/pi/seed-version"
   printf '# readme\n' > "$t/share/doc/pi/README.md"
+  printf 'license\n' > "$t/share/doc/pi/LICENSE"
+  printf 'notice\n' > "$t/share/doc/pi/NOTICE"
   : > "$r/Library/Application Support/Mavergreen/pi-updater.app/Contents/Info.plist"
 }
 comp() { pkgbuild --root "$H/$1" --identifier "$2" --version 1 --install-location / "$H/$3" >/dev/null 2>&1; }
@@ -43,7 +45,7 @@ h_assert_ok sh "$VP" "$H/good.pkg" "$A"
 
 for f in bin/pi libexec/pi/lib.sh libexec/pi/select.sh libexec/pi/stage.sh libexec/pi/addon.sh libexec/pi/env.sh \
          mavergreen.plist share/pi/requires share/pi/darwin-platform.node share/pi/addon-source-id share/pi/seed-version \
-         share/doc/pi/README.md; do
+         share/doc/pi/README.md share/doc/pi/LICENSE share/doc/pi/NOTICE; do
   n="no$(printf '%s' "$f" | tr '/.' '__')"
   mk "$n"; rm "$H/$n/usr/local/mavergreen/pi/$f"; build "$n"
   refused "$n" "a payload without $f" "payload lacks usr/local/mavergreen/pi/$f"

@@ -2,7 +2,7 @@
 # platform: macOS-only -- expands the package with pkgutil
 #   usage: verify-pkg.sh PKG ADDON-DIR
 #          Fails, naming the first problem, unless PKG's dev.mavergreen.pi payload holds the launcher,
-#          its modules, the manifest, the README and pi's updater, and its share/pi holds exactly the
+#          its modules, the manifest, the LICENSE, NOTICE, README and pi's updater, and its share/pi holds exactly the
 #          requires list, ADDON-DIR's darwin-platform.node and addon-source-id byte for byte, and a
 #          seed-version equal to UPSTREAM_VERSION.
 set -eu
@@ -26,7 +26,7 @@ needx "$t/bin/pi"
 for m in lib select stage addon env; do need "$t/libexec/pi/$m.sh"; done
 need "$t/mavergreen.plist"
 for f in requires darwin-platform.node addon-source-id seed-version; do need "$t/share/pi/$f"; done
-need "$t/share/doc/pi/README.md"
+for f in LICENSE NOTICE README.md; do need "$t/share/doc/pi/$f"; done
 need "$root/$app"
 for f in $(ls -A "$t/share/pi"); do
   case "$f" in

@@ -2,7 +2,7 @@
 # platform: macOS-only -- drives shipyard's stage_product.sh, build_component_pkg.sh and set_install_floor.sh
 #   usage: build-pkg.sh BUILD-DIR ADDON-DIR VERSION OUT.pkg
 #          Stages tree/ as committed, the 10.9 addon and its addon-source-id from ADDON-DIR (what
-#          build/build-addon.sh printed), share/pi/seed-version from UPSTREAM_VERSION, the README and
+#          build/build-addon.sh printed), share/pi/seed-version from UPSTREAM_VERSION, the LICENSE, NOTICE, README and
 #          BUILD-DIR's updater under /usr/local/mavergreen/pi, and wraps them in a 10.9.5-floored
 #          product archive.
 set -eu
@@ -41,7 +41,7 @@ fi
 install -m 0644 "$A/darwin-platform.node" "$A/addon-source-id" "$T/share/pi/"
 printf '%s\n' "$SEED" > "$T/share/pi/seed-version"
 chmod 0644 "$T/share/pi/seed-version"
-install -m 0644 "$REPO/README.md" "$T/share/doc/pi/"
+install -m 0644 "$REPO/LICENSE" "$REPO/NOTICE" "$REPO/README.md" "$T/share/doc/pi/"
 find "$ROOT" -name '._*' -delete
 set --
 while read -r short _url || [ -n "$short" ]; do
