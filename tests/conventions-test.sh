@@ -7,10 +7,7 @@ fails=0
 ok()  { printf 'ok: %s\n' "$1"; }
 bad() { printf 'FAIL: %s\n' "$1" >&2; fails=1; }
 
-if ! command -v python3 >/dev/null 2>&1 || ! python3 -c 'import yaml' >/dev/null 2>&1; then
-  # spec: .github/workflows/conventions.yml -- runs the family gate in CI with its own PyYAML
-  printf 'skip: family gate -- no python3 with PyYAML here, and the gate refuses to pass without it\n'
-elif sh "$SHIPYARD_SCRIPTS/check-family-conventions.sh"; then ok "family gate exits 0"; else bad "family gate exits 0"; fi
+if sh "$SHIPYARD_SCRIPTS/check-family-conventions.sh"; then ok "family gate exits 0"; else bad "family gate exits 0"; fi
 
 case "$(cat UPSTREAM_VERSION)" in
   ''|*[!0-9.]*|.*|*.|*..*) bad "UPSTREAM_VERSION is a bare dotted version" ;;

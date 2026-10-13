@@ -73,11 +73,11 @@ rm -f "$OUT/darwin-platform.o"
   -isysroot "$SDK" "-F$SDK/System/Library/Frameworks" \
   -c "$NATIVE/darwin/src/darwin-platform.m" -o "$OUT/darwin-platform.o" >&2 \
   || { rm -f "$OUT/darwin-platform.o" "$OUT/darwin-platform.node"; die "compiling darwin-platform.m failed"; }
-# platform: linking without -fobjc-arc keeps clang from adding libarclite, which Xcode 14.3 and later
-#           no longer ship; 10.9's libobjc has the ARC entry points natively, so it is not needed there
+# platform: linking without -fobjc-arc or -fobjc-link-runtime keeps clang from adding libarclite, which Xcode 14.3+
+#           no longer ships; 10.9's libobjc has the ARC entry points natively, so it is not needed there
 "$CC" -mmacosx-version-min=10.9 -arch x86_64 \
   -isysroot "$SDK" "-F$SDK/System/Library/Frameworks" \
-  -bundle -undefined dynamic_lookup -Wl,-dead_strip -Wl,-x -fobjc-link-runtime \
+  -bundle -undefined dynamic_lookup -Wl,-dead_strip -Wl,-x -lobjc \
   -framework AppKit -framework CoreGraphics -framework Foundation \
   "$OUT/darwin-platform.o" -o "$OUT/darwin-platform.node" >&2 \
   || { rm -f "$OUT/darwin-platform.o" "$OUT/darwin-platform.node"; die "linking darwin-platform.node failed"; }
