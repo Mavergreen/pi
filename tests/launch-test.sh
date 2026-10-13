@@ -164,3 +164,4 @@ h_assert_contains "$(cat "$H/err")" "only releases-v1" "unknown marker: says wha
 h_assert_absent "$H/node-run" "unknown marker: node never run"
 h_assert_eq 0 "$(calls)" "unknown marker: no npm"
 h_assert_contains "$(cat "$R/managed-install.json")" '"schemaVersion":2' "unknown marker: left as found"
+h_done

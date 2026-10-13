@@ -86,3 +86,4 @@ h_assert_absent "$R/current-version" "no release: nothing written"
 marker; rm -f "$R/managed-install.json"
 r=$(pi_choose 2>&1) && rc=0 || rc=$?
 h_assert_eq "" "$r" "missing marker: silent"
+h_done

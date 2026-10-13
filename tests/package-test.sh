@@ -153,3 +153,4 @@ mkdir "$H/noupdater"
 rc=0; out="$(sh "$R/packaging/build-pkg.sh" "$H/noupdater" "$A" "$V" "$H/dist4/pi.pkg" 2>&1)" || rc=$?
 h_assert_eq 1 "$rc" "a build dir without the updater fails"
 h_assert_contains "$out" "configure with -DPI_BUILD_UPDATER=ON" "and says how to build it"
+h_done
