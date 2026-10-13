@@ -67,13 +67,21 @@ CC="${CC:-/usr/bin/clang}"
 SDK="$(sh "$SHIPYARD_SCRIPTS/fetch_sdk.sh" --arch x86_64)" || die "cannot fetch the pinned 10.9 SDK"
 
 # spec: .superpowers/specs/2026-10-09-mavergreen-pi-design.md §3 -- upstream's darwin/build.sh flags for a 10.9 target, verified 2026-10-12
+rm -f "$OUT/darwin-platform.o"
 "$CC" -fobjc-arc -std=c11 -Wall -Wextra -Oz -fvisibility=hidden \
   -mmacosx-version-min=10.9 -arch x86_64 -DNSBitmapImageFileTypePNG=NSPNGFileType \
   -isysroot "$SDK" "-F$SDK/System/Library/Frameworks" \
-  -bundle -undefined dynamic_lookup -Wl,-dead_strip -Wl,-x \
+  -c "$NATIVE/darwin/src/darwin-platform.m" -o "$OUT/darwin-platform.o" >&2 \
+  || { rm -f "$OUT/darwin-platform.o" "$OUT/darwin-platform.node"; die "compiling darwin-platform.m failed"; }
+# platform: linking without -fobjc-arc keeps clang from adding libarclite, which Xcode 14.3 and later
+#           no longer ship; 10.9's libobjc has the ARC entry points natively, so it is not needed there
+"$CC" -mmacosx-version-min=10.9 -arch x86_64 \
+  -isysroot "$SDK" "-F$SDK/System/Library/Frameworks" \
+  -bundle -undefined dynamic_lookup -Wl,-dead_strip -Wl,-x -fobjc-link-runtime \
   -framework AppKit -framework CoreGraphics -framework Foundation \
-  "$NATIVE/darwin/src/darwin-platform.m" -o "$OUT/darwin-platform.node" >&2 \
-  || { rm -f "$OUT/darwin-platform.node"; die "compiling darwin-platform.m failed"; }
+  "$OUT/darwin-platform.o" -o "$OUT/darwin-platform.node" >&2 \
+  || { rm -f "$OUT/darwin-platform.o" "$OUT/darwin-platform.node"; die "linking darwin-platform.node failed"; }
+rm -f "$OUT/darwin-platform.o"
 
 if ! MAVERICKS_DEVIATIONS_ROOT="$ROOT" MAVERICKS_ALLOW_ARCHS=x86_64 MAVERICKS_REQUIRE_DEFINED_SYMBOLS= \
   sh "$SHIPYARD_SCRIPTS/assert_binary_compatible.sh" "$OUT/darwin-platform.node" >&2; then
