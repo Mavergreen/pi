@@ -127,6 +127,9 @@ jobs:
       - name: The package carries the launcher, the updater, the built addon and the seed version
         run: sh packaging/verify-pkg.sh "$BUILD/dist/pi-${{ steps.ver.outputs.ver }}.pkg" "$ADDON"
 
+      - name: Ship the one-command installer
+        run: cp packaging/install.sh "$BUILD/dist/install.sh"
+
       - name: Release notes
         run: |
           set -eu
