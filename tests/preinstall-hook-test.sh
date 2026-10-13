@@ -52,3 +52,4 @@ else
   h_assert_eq 0 "$rc" "the boot volume has no Pi installed into node24: allowed"
   h_assert_eq "" "$(cat "$H/err")" "boot volume: silent"
 fi
+h_done

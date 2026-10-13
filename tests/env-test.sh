@@ -84,3 +84,4 @@ h_assert_eq "$HOME/agent3/install" "$PI_MANAGED_INSTALL_ROOT" "managed root unde
 h_assert_absent "$H/~" "no literal ~ directory in the working directory"
 unset PI_CODING_AGENT_DIR
 
+h_done

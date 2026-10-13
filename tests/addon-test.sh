@@ -205,3 +205,4 @@ h_assert_eq 0 "$rc" "bare set -e, read-only prebuilds dir: exits 0"
 h_assert_eq "reached rc=0" "$(cat "$H/bare-out")" "bare set -e, read-only prebuilds dir: next line runs"
 h_assert_eq "upstream x64 addon" "$(cat "$X64")" "bare set -e, read-only prebuilds dir: upstream untouched"
 h_assert_contains "$(cat "$ERR" 2>/dev/null)" "could not install" "bare set -e, read-only prebuilds dir: reason recorded"
+h_done

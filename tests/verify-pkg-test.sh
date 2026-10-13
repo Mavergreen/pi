@@ -76,3 +76,4 @@ productbuild --package "$H/base.pkg" --package "$H/other.pkg" "$H/noprod.pkg" >/
 rc=0; out="$(sh "$VP" "$H/noprod.pkg" "$A" 2>&1)" || rc=$?
 h_assert_eq 1 "$rc" "a product archive without the pi component fails"
 h_assert_eq "verify-pkg: extract-component: $H/noprod.pkg has no component dev.mavergreen.pi" "$out" "the failure names the identifier, through extract-component"
+h_done

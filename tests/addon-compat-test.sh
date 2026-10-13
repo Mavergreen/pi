@@ -84,3 +84,4 @@ elif [ -n "${CI:-}" ]; then
 else
   echo "addon-compat: dlopen check not exercised on this host (no x86_64 node24 at $NODE24)"
 fi
+h_done

@@ -261,3 +261,4 @@ printf 'nope\n' > "$T/share/pi/seed-version"
 r=$(pi_stage 2>&1) && rc=0 || rc=$?
 h_assert_eq 1 "$([ "$rc" -ne 0 ] && echo 1 || echo 0)" "bad seed-version: non-zero"
 h_assert_eq 0 "$(calls)" "bad seed-version: npm ci never ran"
+h_done

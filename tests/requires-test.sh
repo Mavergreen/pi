@@ -38,3 +38,4 @@ mv "$MG/pi/share/pi/requires" "$MG/pi/share/pi/requires.gone"
 run_pi
 [ "$rc" -ne 0 ] || { echo "FAIL: missing requires should fail" >&2; H_FAILS=$((H_FAILS+1)); }
 h_assert_contains "$err" "missing $(cd "$MG/pi" && pwd -P)/share/pi/requires" "missing requires message"
+h_done

@@ -75,3 +75,4 @@ h_assert_eq "http://x.invalid/r" "$(PI_INSTALLER_API_BASE=http://x.invalid/r//; 
 rc=0; r=$( (HOME=/; pi_init "$H/links/hop1") 2>&1 ) || rc=$?
 h_assert_eq 1 "$rc" "pi_init rejects HOME=/"
 h_assert_contains "$r" "pi: HOME must be an absolute path" "pi_init HOME message"
+h_done
