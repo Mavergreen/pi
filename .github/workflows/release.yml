@@ -106,6 +106,15 @@ jobs:
           test "$(lipo -info /usr/local/mavergreen/node24/bin/node | sed 's/.*: //')" = x86_64
           arch -x86_64 /usr/local/mavergreen/node24/bin/node --version
 
+      # spec: tests/conventions-test.sh runs shipyard's conventions gate, whose workflow-parse
+      #       check needs PyYAML; the runner's python3 has none, and install@v1 does not
+      #       provision it. setup-python, so pip is not PEP 668 externally-managed.
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.14'
+      - name: Provision PyYAML (the family gate's dependency)
+        run: python3 -m pip install --quiet pyyaml && python3 -c 'import yaml; print("PyYAML", yaml.__version__)'
+
       - name: Run the repo's tests
         run: sh "$SHIPYARD_SCRIPTS/run-repo-tests.sh"
 
