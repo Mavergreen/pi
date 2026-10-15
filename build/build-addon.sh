@@ -17,6 +17,7 @@ rm -f "$OUT/darwin-platform.node" "$OUT/addon-source-id" "$OUT/manifest.json"
 mkdir -p "$OUT"
 
 . "$ROOT/build/msc.sh"
+. "$SHIPYARD_SCRIPTS/mavericks_fetch.sh"
 . "$ROOT/tree/libexec/pi/lib.sh"
 . "$ROOT/tree/libexec/pi/addon.sh"
 
@@ -27,7 +28,7 @@ API="${PI_INSTALLER_API_BASE:-https://pi.dev/api/installer/releases}"
 while :; do case "$API" in */) API="${API%/}" ;; *) break ;; esac; done
 
 echo "build-addon: Pi $V: fetching $API/$V" >&2
-curl -fsSL "$API/$V" -o "$OUT/manifest.json" || die "cannot fetch the installer manifest $API/$V"
+shipyard_curl "$API/$V" "$OUT/manifest.json" || die "cannot fetch the installer manifest $API/$V"
 
 # spec: .superpowers/sdd/2026-10-09-mavergreen-pi-wrapper/ref/manifest-1.1.0.json -- packages[] carries name, version, tarball, integrity
 TUI="$(node -e '
@@ -48,7 +49,7 @@ pi_is_version "$TUI_V" || die "pi-tui version is not a version: '$TUI_V'"
 
 TGZ="$OUT/pi-tui-$TUI_V.tgz"
 echo "build-addon: pi-tui $TUI_V: fetching $TUI_URL" >&2
-curl -fsSL "$TUI_URL" -o "$TGZ" || die "cannot fetch $TUI_URL"
+shipyard_curl "$TUI_URL" "$TGZ" || die "cannot fetch $TUI_URL"
 node -e '
 const want = process.argv[2];
 const got = "sha512-" + require("crypto").createHash("sha512").update(require("fs").readFileSync(process.argv[1])).digest("base64");
